@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AchievementSvg from "@/assets/Illustrations/achievement.svg";
+import SecuritySvg from "@/assets/Illustrations/security.svg";
 import { Button } from "@/components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { getAllUsers } from "@/services/api/users";
 import { useDispatch } from "react-redux";
 import { setIsLogin } from "@/redux/slices/userSlice";
 
-function Login() {
+function AdminLogin() {
   const [loading, setLoading] = useState();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -45,12 +45,12 @@ function Login() {
           setLoading(true);
 
           let isAuth = false;
-          console.log(users);
 
           users.forEach((user) => {
             if (
               user.username === values.username &&
-              user.password === values.password
+              user.password === values.password &&
+              user.isAdmin
             ) {
               isAuth = true;
 
@@ -59,17 +59,14 @@ function Login() {
                 username: user.username,
                 fullName: user.fullName,
                 email: user.email,
-                password: user.password,
                 isPublic: user.isPublic,
-                bio: user?.bio ? user?.bio : "",
+                bio: "",
                 followers: [],
                 followings: [],
                 requests: [],
                 posts: [],
                 stories: [],
-                profilePicture: user?.profilePicture
-                  ? user?.profilePicture
-                  : "",
+                profilePicture: "",
                 isAdmin: user.isAdmin,
               };
 
@@ -78,7 +75,7 @@ function Login() {
           });
 
           if (isAuth) {
-            navigate("/profile");
+            navigate("/admin/users");
 
             toast({
               title: "Successfully login!",
@@ -106,7 +103,7 @@ function Login() {
   return (
     <div className="flex items-center">
       <div className="w-1/2">
-        <img src={AchievementSvg} alt="" className="w-full h-full" />
+        <img src={SecuritySvg} alt="" className="w-full h-full" />
       </div>
 
       {/* login form */}
@@ -132,7 +129,7 @@ function Login() {
                     type="text"
                     name="username"
                     id="username"
-                    placeholder="Acme"
+                    placeholder="Admin"
                     value={values.username}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -189,4 +186,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AdminLogin;

@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { Input } from "./ui/Input";
+import { Search } from "lucide-react";
 
 function Navbar() {
   return (
@@ -8,9 +10,20 @@ function Navbar() {
         <div className="flex items-center justify-between">
           <Link to="/">
             <h1 className="text-4xl font-semibold font-prime">
-              ok-<span className="text-[#FF9A05]">social.</span>
+              ok<span className="text-[#FF9A05]">social.</span>
             </h1>
           </Link>
+
+          <div className="w-1/3">
+            <form className="relative h-full">
+              <Input
+                type="text"
+                placeholder="Search users"
+                className="w-full h-full"
+              />
+              <Search className="absolute right-3 top-2" />
+            </form>
+          </div>
 
           <div className="flex gap-x-2 items-center">
             <Link
@@ -21,6 +34,15 @@ function Navbar() {
               )}
             >
               Feed
+            </Link>
+            <Link
+              to="/posts"
+              className={cn(
+                "px-3 py-1 hover:bg-accent rounded",
+                location.pathname === "/posts" && "bg-accent"
+              )}
+            >
+              Posts
             </Link>
             <Link
               to="/requests"
