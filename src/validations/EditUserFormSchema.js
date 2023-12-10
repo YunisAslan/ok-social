@@ -12,8 +12,7 @@ export const editUserFormSchema = yup.object({
     .required("Fullname required!")
     .trim(),
   email: yup.string().email("Invalid email").required("Email required!").trim(),
-  currentPassword: yup.string().optional(),
-  newPassword: yup
+  currentPassword: yup
     .string()
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,}$/,
@@ -21,11 +20,17 @@ export const editUserFormSchema = yup.object({
     )
     .trim()
     .optional(),
+  newPassword: yup
+    .string()
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,}$/,
+      "Password must be at least 5 characters long, contain at least 1 uppercase letter, 1 lowercase letter, and 1 number."
+    )
+    .trim(),
   confirmNewPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords must match")
-    .trim()
-    .optional(),
+    .trim(),
   profilePicture: yup.string().url("Invalid url").optional(),
   bio: yup.string().optional(),
   isPublic: yup.boolean().optional(),

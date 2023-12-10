@@ -6,6 +6,12 @@ export async function getAllUsers() {
   return data;
 }
 
+export async function getUserByID(id) {
+  const { data } = await axios.get(`${process.env.BASE_URL}/users/${id}`);
+
+  return data;
+}
+
 export async function createUserRequest(payload) {
   const { data } = await axios.post(`${process.env.BASE_URL}/users`, payload);
 

@@ -45,14 +45,17 @@ function Login() {
           setLoading(true);
 
           let isAuth = false;
+          let isAdmin = false;
           console.log(users);
 
           users.forEach((user) => {
             if (
               user.username === values.username &&
-              user.password === values.password
+              user.password === values.password &&
+              user.isAdmin
             ) {
               isAuth = true;
+              isAdmin = true;
 
               const secureUserInfo = {
                 id: user.id,
@@ -65,7 +68,7 @@ function Login() {
                 followers: [],
                 followings: [],
                 requests: [],
-                posts: [],
+                posts: user?.posts || [],
                 stories: [],
                 profilePicture: user?.profilePicture
                   ? user?.profilePicture
@@ -73,11 +76,40 @@ function Login() {
                 isAdmin: user.isAdmin,
               };
 
-              dispatch(setIsLogin(secureUserInfo));
+              dispatch(setIsLogin({ userID: secureUserInfo.id }));
+            } else if (
+              user.username === values.username &&
+              user.password === values.password
+            ) {
+              isAuth = true;
+              isAdmin = false;
+
+              const secureUserInfo = {
+                id: user.id,
+                username: user.username,
+                fullName: user.fullName,
+                email: user.email,
+                password: user.password,
+                isPublic: user.isPublic,
+                bio: user?.bio ? user?.bio : "",
+                followers: [],
+                followings: [],
+                requests: [],
+                posts: user?.posts || [],
+                stories: [],
+                profilePicture: user?.profilePicture
+                  ? user?.profilePicture
+                  : "",
+                isAdmin: user.isAdmin,
+              };
+
+              dispatch(setIsLogin({ userID: secureUserInfo.id }));
             }
           });
 
-          if (isAuth) {
+          if (isAdmin && isAuth) {
+            navigate("/admin/users");
+          } else if (isAuth) {
             navigate("/profile");
 
             toast({

@@ -10,69 +10,98 @@ import {
 } from "@/components/ui/Dialog";
 import { newPostFormSchema } from "@/validations/NewPostFormSchema";
 import { useFormik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import { editUserRequest } from "@/services/api/users";
 import { nanoid } from "nanoid";
-import { addNewUserPost, updateUser } from "@/redux/slices/userSlice";
+import { editUserRequest, getUserByID } from "@/services/api/users";
+import UserPost from "@/components/UserPost";
+import { Loader2Icon } from "lucide-react";
 
 function Posts() {
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState();
 
   const user = useSelector((state) => state.user.user);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
 
-  const { handleSubmit, handleChange, handleBlur, errors, values, touched } =
-    useFormik({
-      initialValues: {
-        title: "",
-        imageURL: "",
-      },
+        const currentUserData = await getUserByID(user.userID);
+        setCurrentUser(currentUserData);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-      onSubmit: async (values) => {
-        try {
-          setLoading(true);
+    loadData();
+  }, []);
 
-          const newPost = {
-            id: nanoid(),
-            title: values.title,
-            imageURL: values.imageURL,
-            likes: [],
-          };
+  const {
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    resetForm,
+    errors,
+    values,
+    touched,
+  } = useFormik({
+    initialValues: {
+      title: "",
+      imageURL: "",
+    },
 
-          dispatch(addNewUserPost(newPost));
-          console.log(user);
-          //   const editedUser = await editUserRequest(user.id, user);
-          //   console.log(editedUser);
+    onSubmit: async (values) => {
+      try {
+        setLoading(true);
 
-          //   setUser((prevUser) => ({
-          //     ...prevUser,
-          //     posts: [...prevUser?.posts, newPost],
-          //   }));
+        const newPost = {
+          id: nanoid(),
+          title: values.title,
+          imageURL: values.imageURL,
+          likes: [],
+          date: Date.now(),
+          comments: [],
+        };
 
-          //   setUser(editedUser);
+        const updatedUser = {
+          ...currentUser,
+          posts: [...currentUser.posts, newPost],
+        };
 
-          //   dispatch(updateUser(user));
-        } catch (err) {
-          console.error(err);
-          toast({
-            title: "Something went wrong!",
-            description: "Please try again later",
-            variant: "destructive",
-          });
-        } finally {
-          setLoading(false);
-        }
-      },
+        const editedUser = await editUserRequest(user.userID, updatedUser);
 
-      validationSchema: newPostFormSchema,
-    });
+        // update ui
+        setCurrentUser(() => ({
+          ...currentUser,
+          posts: [...currentUser.posts, newPost],
+        }));
+
+        setOpen(false);
+        resetForm();
+      } catch (err) {
+        console.error(err);
+        toast({
+          title: "Something went wrong!",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+
+    validationSchema: newPostFormSchema,
+  });
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button>Create new post</Button>
         </DialogTrigger>
@@ -128,7 +157,9 @@ function Posts() {
             </div>
 
             <div>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" isLoading={loading}>
+                Submit
+              </Button>
             </div>
           </form>
         </DialogContent>
@@ -136,7 +167,24 @@ function Posts() {
 
       <br />
 
-      {JSON.stringify(user?.posts)}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-5 gap-x-4">
+        {loading ? (
+          <div className="flex justify-center">
+            <Loader2Icon className="w-6 h-6 animate-spin" />
+          </div>
+        ) : (
+          currentUser?.posts?.map((post) => {
+            return (
+              <UserPost
+                key={post.id}
+                post={post}
+                setCurrentUser={setCurrentUser}
+                currentUser={currentUser}
+              />
+            );
+          })
+        )}
+      </div>
     </div>
   );
 }

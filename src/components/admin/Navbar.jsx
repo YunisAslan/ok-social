@@ -26,7 +26,7 @@ function Navbar() {
         <div className="flex items-center justify-between">
           <Link to="/">
             <h1 className="text-4xl font-semibold font-prime">
-              ok<span className="text-[#FF9A05]">social.</span>
+              ok<span className="text-brand">social.</span>
             </h1>
           </Link>
 

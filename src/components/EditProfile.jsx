@@ -15,14 +15,12 @@ import { useFormik } from "formik";
 import { editUserFormSchema } from "@/validations/EditUserFormSchema";
 import { editUserRequest, getAllUsers } from "@/services/api/users";
 import { useToast } from "@/hooks/use-toast";
-import { setIsLogin } from "@/redux/slices/userSlice";
-import { useDispatch } from "react-redux";
 
 function EditProfile({ currentUser, setCurrentUser }) {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  const { toast } = useToast();
-  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -32,6 +30,10 @@ function EditProfile({ currentUser, setCurrentUser }) {
 
     loadData();
   }, [setUsers]);
+
+  useEffect(() => {
+    // console.log("");
+  }, [currentUser]);
 
   const {
     handleSubmit,
@@ -46,7 +48,7 @@ function EditProfile({ currentUser, setCurrentUser }) {
       username: currentUser?.username,
       fullName: currentUser?.fullName,
       email: currentUser?.email,
-      currentPassword: currentUser?.password,
+      currentPassword: "",
       newPassword: "",
       confirmNewPassword: "",
       profilePicture: currentUser?.profilePicture,
@@ -58,60 +60,73 @@ function EditProfile({ currentUser, setCurrentUser }) {
         setLoading(true);
 
         const editedUser = {
+          ...currentUser,
           username: values.username,
           fullName: values.fullName,
           email: values.email,
           password: values.newPassword
             ? values.newPassword
-            : values.currentPassword,
+            : values.currentPassword
+            ? currentUser.password
+            : currentUser.password,
           isPublic: values.isPublic,
           bio: values.bio,
-          followers: [],
-          followings: [],
-          requests: [],
-          posts: [],
-          stories: [],
-          isVerified: false,
-          isAdmin: false,
           profilePicture: values.profilePicture,
         };
 
-        //   const existUsername = users.find(
-        //     (user) => user.username === editedUser.username
-        //   );
+        if (values?.currentPassword) {
+          if (currentUser?.password === values.currentPassword) {
+            console.log("exactly");
+          } else {
+            toast({
+              title: "Your password incorrect!",
+              variant: "destructive",
+            });
 
-        //   const existEmail = users.find(
-        //     (user) => user.email === editedUser.email
-        //   );
+            return;
+          }
+        }
 
-        //   if (existUsername && existEmail) {
-        //     toast({
-        //       title: "This username and email already exists!",
-        //       description: "Select another.",
-        //       variant: "destructive",
-        //     });
+        const existUsername = users?.find(
+          (user) =>
+            user.username == editedUser.username &&
+            currentUser.username != editedUser.username
+        );
 
-        //     return;
-        //   }
+        const existEmail = users?.find(
+          (user) =>
+            user.email == editedUser.email &&
+            currentUser.email != editedUser.email
+        );
 
-        //   if (existUsername) {
-        //     toast({
-        //       title: "This username already exists!",
-        //       description: "Select another username.",
-        //       variant: "destructive",
-        //     });
+        if (existUsername && existEmail) {
+          toast({
+            title: "This username and email already exists!",
+            description: "Select another.",
+            variant: "destructive",
+          });
 
-        //     return;
-        //   }
+          return;
+        }
 
-        //   if (existEmail) {
-        //     toast({
-        //       title: "This email already exists!",
-        //       description: "Select another email address.",
-        //       variant: "destructive",
-        //     });
-        //     return;
-        //   }
+        if (existUsername) {
+          toast({
+            title: "This username already exists!",
+            description: "Select another username.",
+            variant: "destructive",
+          });
+
+          return;
+        }
+
+        if (existEmail) {
+          toast({
+            title: "This email already exists!",
+            description: "Select another email address.",
+            variant: "destructive",
+          });
+          return;
+        }
 
         const brandNewEditedUser = await editUserRequest(
           currentUser.id,
@@ -119,13 +134,16 @@ function EditProfile({ currentUser, setCurrentUser }) {
         );
 
         setCurrentUser(brandNewEditedUser);
-        dispatch(setIsLogin(brandNewEditedUser));
 
         toast({
           title: "Successfully edited!",
         });
 
-        setFieldValue("", "");
+        setOpen(false);
+
+        setFieldValue("newPassword", "");
+        setFieldValue("confirmNewPassword", "");
+        setFieldValue("currentPassword", "");
       } catch (err) {
         console.error(err);
         toast({
@@ -141,9 +159,9 @@ function EditProfile({ currentUser, setCurrentUser }) {
   });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" onClick={() => setOpen(!open)}>
           <Edit2 className="w-5 h-5" />
         </Button>
       </DialogTrigger>
@@ -227,15 +245,16 @@ function EditProfile({ currentUser, setCurrentUser }) {
                 name="currentPassword"
                 id="currentPassword"
                 placeholder="••••••••"
-                readOnly
-                value={currentUser?.password}
-                //   onChange={handleChange}
-                //   onBlur={handleBlur}
+                value={values.currentPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
 
-              {/* {errors.currentPassword && touched.currentPassword ? (
-              <span className="text-sm text-red-500">{errors.currentPassword}</span>
-            ) : null} */}
+              {errors.currentPassword && touched.currentPassword ? (
+                <span className="text-sm text-red-500">
+                  {errors.currentPassword}
+                </span>
+              ) : null}
             </div>
 
             <div className="w-full">

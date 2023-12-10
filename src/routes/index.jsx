@@ -1,10 +1,12 @@
+import NotFound from "@/components/NotFound";
 import AdminLogin from "@/pages/admin/login";
 import Users from "@/pages/admin/users";
+import Feed from "@/pages/feed";
 import AdminLayout from "@/pages/layouts/AdminLayout";
 import RootLayout from "@/pages/layouts/RootLayout";
 import Login from "@/pages/login";
-import Posts from "@/pages/posts";
 import Profile from "@/pages/profile";
+import ProfileDetail from "@/pages/profile-detail";
 import Register from "@/pages/register";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -22,6 +24,10 @@ export const routes = createBrowserRouter([
         element: <Profile />,
       },
       {
+        path: "profile/:id",
+        element: <ProfileDetail />,
+      },
+      {
         path: "login",
         element: <Login />,
       },
@@ -30,8 +36,8 @@ export const routes = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "posts",
-        element: <Posts />,
+        path: "feed",
+        element: <Feed />,
       },
     ],
   },
@@ -49,4 +55,5 @@ export const routes = createBrowserRouter([
       },
     ],
   },
+  { path: "*", element: <NotFound /> },
 ]);

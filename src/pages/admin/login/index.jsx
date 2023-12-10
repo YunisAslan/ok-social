@@ -70,7 +70,7 @@ function AdminLogin() {
                 isAdmin: user.isAdmin,
               };
 
-              dispatch(setIsLogin(secureUserInfo));
+              dispatch(setIsLogin({ userID: secureUserInfo.id }));
             }
           });
 
