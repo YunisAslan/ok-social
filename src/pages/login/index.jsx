@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AchievementSvg from "@/assets/Illustrations/achievement.svg";
 import { Button } from "@/components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input";
 import { useFormik } from "formik";
 import { loginFormSchema } from "@/validations/LoginFormSchema";
 import { Label } from "@/components/ui/Label";

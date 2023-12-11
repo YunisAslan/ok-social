@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/Label";
 import { registerFormSchema } from "@/validations/RegisterFormSchema";
 import { createUserRequest, getAllUsers } from "@/services/api/users";
 import { useEffect, useState } from "react";
