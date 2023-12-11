@@ -13,7 +13,11 @@ import { Label } from "./ui/Label";
 import { Textarea } from "./ui/Textarea";
 import { useFormik } from "formik";
 import { editUserFormSchema } from "@/validations/EditUserFormSchema";
-import { editUserRequest, getAllUsers } from "@/services/api/users";
+import {
+  editUserRequest,
+  getAllUsers,
+  getUserByID,
+} from "@/services/api/users";
 import { useToast } from "@/hooks/use-toast";
 
 function EditProfile({ currentUser, setCurrentUser }) {
@@ -73,6 +77,27 @@ function EditProfile({ currentUser, setCurrentUser }) {
           bio: values.bio,
           profilePicture: values.profilePicture,
         };
+
+        if (values.isPublic) {
+          const updatedUser = {
+            ...currentUser,
+            followers: [...currentUser.followers, ...currentUser.requests],
+            requests: [],
+          };
+
+          updatedUser.followers.forEach(async (requestUserId) => {
+            const requestUser = await getUserByID(requestUserId);
+            if (requestUser) {
+              requestUser.followings.push(currentUser.id);
+              await editUserRequest(requestUserId, requestUser);
+            }
+          });
+
+          await editUserRequest(currentUser.id, {
+            followers: updatedUser.followers,
+            requests: [],
+          });
+        }
 
         if (values?.currentPassword) {
           if (currentUser?.password === values.currentPassword) {
@@ -149,6 +174,7 @@ function EditProfile({ currentUser, setCurrentUser }) {
         toast({
           title: "Something went wrong!",
           description: "Please try again later!",
+          variant: "destructive",
         });
       } finally {
         setLoading(false);

@@ -1,4 +1,4 @@
-import { MessageCircleIcon, Pen, ThumbsUp, Trash } from "lucide-react";
+import { MessageCircleIcon, Pen, Trash } from "lucide-react";
 import { Button } from "./ui/Button";
 import { editUserRequest } from "@/services/api/users";
 import { useState } from "react";
@@ -16,6 +16,8 @@ import { Input } from "./ui/Input";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import PostLikeBtn from "./PostLikeBtn";
+import PostCommentsModal from "./PostCommentsModal";
 
 function UserPost({ post, currentUser, setCurrentUser }) {
   const [open, setOpen] = useState(false);
@@ -214,19 +216,11 @@ function UserPost({ post, currentUser, setCurrentUser }) {
 
           <div className="flex items-center gap-x-2">
             <div className="flex items-center gap-x-1">
-              <Button variant="ghost" size="icon">
-                <MessageCircleIcon />
-              </Button>
-
-              <span>{post?.comments?.length}</span>
+              <PostCommentsModal post={post} currentUser={user} />
             </div>
 
             <div className="flex items-center gap-x-1">
-              <Button variant="ghost" size="icon">
-                <ThumbsUp />
-              </Button>
-
-              <span>{post?.likes?.length}</span>
+              <PostLikeBtn post={post} user={user} />
             </div>
           </div>
         </div>

@@ -67,6 +67,7 @@ function Posts() {
           likes: [],
           date: Date.now(),
           comments: [],
+          creatorID: currentUser.id,
         };
 
         const updatedUser = {

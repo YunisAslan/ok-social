@@ -137,15 +137,15 @@ function Login() {
 
   return (
     <div className="flex items-center">
-      <div className="w-1/2">
+      <div className="w-1/2 hidden md:block">
         <img src={AchievementSvg} alt="" className="w-full h-full" />
       </div>
 
       {/* login form */}
-      <div className="w-1/2">
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 mt-3">
+      <div className="w-full md:w-1/2">
+        <div className="flex flex-col items-center justify-center px-2 md:px-6 py-8 mx-auto lg:py-0 mt-3">
           <div className="w-full bg-white rounded-lg md:mt-0 sm:max-w-md xl:p-0">
-            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <div className="space-y-4 md:space-y-6 md:p-8">
               <h1 className="text-xl font-bold md:text-2xl">
                 Sign in to your account
               </h1>

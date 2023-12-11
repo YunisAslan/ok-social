@@ -1,25 +1,23 @@
 import FollowersModal from "@/components/FollowersModal";
 import FollowingsModal from "@/components/FollowingsModal";
-import NotFound from "@/components/NotFound";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { getUserByID } from "@/services/api/users";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import DefaultUserImg from "@/assets/images/default-user-img.png";
 import UserPost from "@/components/UserPost";
 import { BadgeCheck, Loader2Icon, Lock } from "lucide-react";
-import RequestsModal from "@/components/RequestsModal";
-import EditProfile from "@/components/EditProfile";
-0;
+
 function ProfileDetail() {
   const { id } = useParams();
 
   const { toast } = useToast();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.user);
 
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -41,9 +39,8 @@ function ProfileDetail() {
     loadData();
   }, [id, setCurrentUser]);
 
-  if (!id) {
-    return <NotFound />;
-  }
+  console.log("Current user", currentUser?.followers);
+  console.log("user", user.userID);
 
   return (
     <div>
@@ -165,7 +162,8 @@ function ProfileDetail() {
 
       {/* posts */}
       <div className="mt-10">
-        {currentUser?.isPublic ? (
+        {currentUser?.isPublic ||
+        currentUser?.followers?.includes(user.userID) ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-5 gap-x-4">
             {loading ? (
               <div className="flex justify-center w-full col-span-12">

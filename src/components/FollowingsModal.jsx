@@ -10,8 +10,9 @@ import { Button } from "./ui/Button";
 import { useEffect, useState } from "react";
 import { getAllUsers } from "@/services/api/users";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { BadgeCheck, Loader2 } from "lucide-react";
 import DefaultUserImg from "@/assets/images/default-user-img.png";
+import FollowRequestBtn from "./FollowRequestBtn";
 
 function FollowingsModal({ loading, currentUser }) {
   const [followings, setFollowings] = useState([]);
@@ -78,19 +79,25 @@ function FollowingsModal({ loading, currentUser }) {
                       </div>
 
                       <div>
-                        <h1 className="text-base font-semibold">
+                        <h1 className="text-base font-semibold flex items-center gap-x-2">
                           <Link to={`/profile/${following.id}`}>
                             {following.username}
                           </Link>
+
+                          {following?.isVerified && (
+                            <BadgeCheck className="stroke-[#4f3ed0] w-4 h-4" />
+                          )}
                         </h1>
                         <p className="text-xs text-muted-foreground">
                           {following.email}
                         </p>
                       </div>
                     </div>
-
                     <div>
-                      <Button size="sm">Follow</Button>
+                      <FollowRequestBtn
+                        currentUser={currentUser}
+                        user={following}
+                      />
                     </div>
                   </div>
                 );

@@ -81,6 +81,12 @@ function Feed() {
             return <FeedPost key={post.id} post={post} />;
           })
       )}
+
+      {followingUsersPosts.length === 0 && (
+        <div className="flex justify-center">
+          You don't have any feed post for now
+        </div>
+      )}
     </div>
   );
 }

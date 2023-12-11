@@ -10,7 +10,7 @@ import { Button } from "./ui/Button";
 import { useEffect, useState } from "react";
 import { editUserRequest, getAllUsers } from "@/services/api/users";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { BadgeCheck, Loader2 } from "lucide-react";
 import DefaultUserImg from "@/assets/images/default-user-img.png";
 
 function RequestsModal({ currentUser, loading }) {
@@ -40,18 +40,40 @@ function RequestsModal({ currentUser, loading }) {
   }, [currentUser?.requests]);
 
   const handleAccept = async (requestedUser) => {
-    const updatedCurrentUser = {
-      ...currentUser,
+    console.log(requestedUser);
+
+    const filteredCurrentUserRequests = currentUser.requests.filter(
+      (u) => u != requestedUser.id
+    );
+
+    await editUserRequest(currentUser.id, {
       followers: [...currentUser.followers, requestedUser.id],
-    };
+      requests: filteredCurrentUserRequests,
+    });
 
-    const updatedFromUser = {
-      ...requestedUser,
+    await editUserRequest(requestedUser.id, {
       followings: [...requestedUser.followings, currentUser.id],
-    };
+    });
 
-    await editUserRequest(currentUser.id, updatedCurrentUser);
-    await editUserRequest(requestedUser.id, updatedFromUser);
+    const filteredRequests = requests.filter(
+      (req) => req.id != requestedUser.id
+    );
+    setRequests([...filteredRequests]);
+  };
+
+  const handleReject = async (requestedUser) => {
+    const filteredCurrentUserRequests = currentUser.requests.filter(
+      (u) => u != requestedUser.id
+    );
+
+    await editUserRequest(currentUser.id, {
+      requests: filteredCurrentUserRequests,
+    });
+
+    const filteredRequests = requests.filter(
+      (req) => req.id != requestedUser.id
+    );
+    setRequests([...filteredRequests]);
   };
 
   return (
@@ -93,10 +115,14 @@ function RequestsModal({ currentUser, loading }) {
                       </div>
 
                       <div>
-                        <h1 className="text-base font-semibold">
+                        <h1 className="text-base font-semibold flex items-center gap-x-2">
                           <Link to={`/profile/${request.id}`}>
                             {request.username}
                           </Link>
+
+                          {request?.isVerified && (
+                            <BadgeCheck className="stroke-[#4f3ed0] w-4 h-4" />
+                          )}
                         </h1>
                         <p className="text-xs text-muted-foreground">
                           {request.email}

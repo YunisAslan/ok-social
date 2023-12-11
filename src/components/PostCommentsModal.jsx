@@ -33,6 +33,7 @@ function PostCommentsModal({ post, currentUser }) {
           creators[comment.creatorID] = creatorData;
         }
       }
+
       setCommentCreators(creators);
     };
 
@@ -52,7 +53,7 @@ function PostCommentsModal({ post, currentUser }) {
     const postCreatorData = await getUserByID(post.creatorID);
 
     const newComment = {
-      creatorID: currentUser.id,
+      creatorID: currentUser.id || currentUser.userID,
       text: commentValue,
     };
 
@@ -78,6 +79,7 @@ function PostCommentsModal({ post, currentUser }) {
         likes: updatedPost.likes,
         date: updatedPost.date,
         comments: updatedPost?.comments,
+        creatorID: updatedPost?.creatorID,
       })),
     });
 
@@ -123,6 +125,7 @@ function PostCommentsModal({ post, currentUser }) {
           ) : (
             postComments.map((comment, i) => {
               const commentCreator = commentCreators[comment.creatorID] || {};
+
               return (
                 <div
                   key={i}
@@ -150,7 +153,7 @@ function PostCommentsModal({ post, currentUser }) {
 
                       <div className="px-3 py-2">
                         <p className="text-lg text-muted-foreground">
-                          <p>{comment?.text}</p>
+                          <span>{comment?.text}</span>
                         </p>
                       </div>
                     </div>

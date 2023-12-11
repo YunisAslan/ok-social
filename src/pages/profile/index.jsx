@@ -84,6 +84,7 @@ function Profile() {
           likes: [],
           date: Date.now(),
           comments: [],
+          creatorID: currentUser.id,
         };
 
         const updatedUser = {

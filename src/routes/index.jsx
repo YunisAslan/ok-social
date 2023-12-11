@@ -2,6 +2,7 @@ import NotFound from "@/components/NotFound";
 import AdminLogin from "@/pages/admin/login";
 import Users from "@/pages/admin/users";
 import Feed from "@/pages/feed";
+import Home from "@/pages/home";
 import AdminLayout from "@/pages/layouts/AdminLayout";
 import RootLayout from "@/pages/layouts/RootLayout";
 import Login from "@/pages/login";
@@ -17,7 +18,7 @@ export const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: "Home",
+        element: <Home />,
       },
       {
         path: "profile",
