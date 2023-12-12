@@ -55,7 +55,7 @@ function Register() {
             profilePicture: "",
           };
 
-          const existUsername = users.find(
+          const existUsername = users?.find(
             (user) => user.username === newUser.username
           );
 

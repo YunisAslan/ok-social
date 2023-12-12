@@ -46,9 +46,8 @@ function Login() {
 
           let isAuth = false;
           let isAdmin = false;
-          console.log(users);
 
-          users.forEach((user) => {
+          users?.forEach((user) => {
             if (
               user.username === values.username &&
               user.password === values.password &&
