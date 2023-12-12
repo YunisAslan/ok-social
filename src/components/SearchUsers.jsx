@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/Command";
 import { Button } from "./ui/Button";
 import { Link } from "react-router-dom";
-import { BadgeCheck, Lock } from "lucide-react";
+import { BadgeCheck, Lock, Search } from "lucide-react";
 import { useSelector } from "react-redux";
 import {
   editUserRequest,
@@ -76,13 +76,20 @@ function SearchUsers({ users, setUsers }) {
           onClick={() => setOpen(!open)}
           className="w-full bg-accent flex justify-between hover:bg-accent/50"
         >
-          <span className="text-muted-foreground">Search users..</span>
-          <p className="text-sm text-muted-foreground">
+          <span className="hidden lg:flex text-muted-foreground">
+            Search users..
+          </span>
+          <p className="hidden lg:flex text-sm text-muted-foreground">
             Press{" "}
             <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
               <span className="text-xs">Ctrl</span>K
             </kbd>
           </p>
+
+          <Search className="lg:hidden w-6 h-6 text-muted-foreground mr-1" />
+          <span className="lg:hidden text-sm text-muted-foreground">
+            Search..
+          </span>
         </Button>
       </div>
 

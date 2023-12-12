@@ -384,7 +384,7 @@ function Profile() {
 
         <br />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-5 gap-x-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-5 gap-4">
           {loading ? (
             <div className="flex justify-center w-full col-span-12">
               <Loader2Icon className="w-6 h-6 animate-spin" />

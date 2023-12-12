@@ -25,7 +25,7 @@ function Navbar() {
       <div className="container">
         <div className="flex items-center justify-between">
           <Link to="/">
-            <h1 className="text-4xl font-semibold font-prime">
+            <h1 className="text-3xl lg:text-4xl font-semibold font-prime">
               ok<span className="text-brand">social.</span>
             </h1>
           </Link>
@@ -41,7 +41,9 @@ function Navbar() {
               Users
             </Link>
 
-            <Button onClick={handleLogout}>Log out</Button>
+            <Button onClick={handleLogout} size="sm">
+              Log out
+            </Button>
           </div>
         </div>
       </div>
