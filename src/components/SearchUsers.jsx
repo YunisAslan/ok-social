@@ -29,7 +29,7 @@ function SearchUsers({ users, setUsers }) {
       try {
         setLoading(true);
 
-        const currentUserData = await getUserByID(user.userID);
+        const currentUserData = await getUserByID(user?.userID);
         setCurrentUser(currentUserData);
       } catch (err) {
         console.error(err);
